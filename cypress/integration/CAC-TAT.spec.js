@@ -16,7 +16,7 @@ describe("Central de Atendimento ao Cliente TAT", function () {
     cy.get("#lastName").type("Vianna");
     cy.get("#email").type("viannawp@gmail.com");
     cy.get("#open-text-area").type(longText, { delay: 0 });
-    cy.get('button[type="submit"]').click();
+    cy.contains("button", "Enviar").click();
     cy.get(".success").should("be.visible");
   });
 
@@ -25,7 +25,7 @@ describe("Central de Atendimento ao Cliente TAT", function () {
     cy.get("#lastName").type("Vianna");
     cy.get("#email").type("viannawp@gmail,com");
     cy.get("#open-text-area").type("Teste");
-    cy.get('button[type="submit"]').click();
+    cy.contains("button", "Enviar").click();
 
     cy.get(".error").should("be.visible");
   });
@@ -34,46 +34,56 @@ describe("Central de Atendimento ao Cliente TAT", function () {
     cy.get("#phone").type("abcdefg").should("have.value", "");
   });
 
-  it('Exibe mensagem de erro quando o telefone se torna obrigatório mas não é preenchido antes do envio do formulário', function() {
+  it("Exibe mensagem de erro quando o telefone se torna obrigatório mas não é preenchido antes do envio do formulário", function () {
     cy.get("#firstName").type("William");
     cy.get("#lastName").type("Vianna");
     cy.get("#email").type("viannawp@gmail.com");
-    cy.get('#phone-checkbox').click()
+    cy.get("#phone-checkbox").click();
     cy.get("#open-text-area").type("Teste");
-    cy.get('button[type="submit"]').click();
+    cy.contains("button", "Enviar").click();
 
     cy.get(".error").should("be.visible");
   });
 
-it.only('Preenche e limpa os campos nome, sobrenome, email e telefone', function(){
-  cy.get("#firstName")
-    .type("William")
-    .should('have.value', 'William')
-    .clear()
-    .should('have.value', '')
+  it("Preenche e limpa os campos nome, sobrenome, email e telefone", function () {
+    cy.get("#firstName")
+      .type("William")
+      .should("have.value", "William")
+      .clear()
+      .should("have.value", "");
     cy.get("#lastName")
       .type("Vianna")
-      .should('have.value', 'Vianna')
+      .should("have.value", "Vianna")
       .clear()
-      .should('have.value', '')
+      .should("have.value", "");
     cy.get("#email")
       .type("viannawp@gmail.com")
-      .should('have.value', 'viannawp@gmail.com')
+      .should("have.value", "viannawp@gmail.com")
       .clear()
-      .should('have.value', '')
-    cy.get('#phone-checkbox').click()
-    cy.get('#phone')
+      .should("have.value", "");
+    cy.get("#phone-checkbox").click();
+    cy.get("#phone")
       .type("11999999999")
-      .should('have.value', '11999999999')
+      .should("have.value", "11999999999")
       .clear()
-      .should('have.value', '')
+      .should("have.value", "");
     cy.get("#open-text-area")
       .type("Teste")
-      .should('have.value', 'Teste')
+      .should("have.value", "Teste")
       .clear()
-      .should('have.value', '')
-    cy.get('button[type="submit"]').click();
+      .should("have.value", "");
+    cy.contains("button", "Enviar").click();
 
     cy.get(".error").should("be.visible");
-})
-})
+  });
+
+  it("Exibe mensagem de erro ao submeter o formulário sem preencher os campos obrigatórios", function () {
+    cy.contains("button", "Enviar").click();
+    cy.get(".error").should("be.visible");
+  });
+
+  it("Envia o formuário com sucesso usando um comando customizado", function () {
+    cy.fillMandatoryFieldsAndSubmit();
+    cy.get(".success").should("be.visible");
+  });
+});
