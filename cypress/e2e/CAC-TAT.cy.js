@@ -4,6 +4,7 @@ describe("Central de Atendimento ao Cliente TAT", function () {
   beforeEach(function () {
     cy.visit("./src/index.html");
   });
+
   it("Verifica o título da aplicação", function () {
     cy.title().should("be.equal", "Central de Atendimento ao Cliente TAT");
   });
@@ -85,5 +86,32 @@ describe("Central de Atendimento ao Cliente TAT", function () {
   it("Envia o formuário com sucesso usando um comando customizado", function () {
     cy.fillMandatoryFieldsAndSubmit();
     cy.get(".success").should("be.visible");
+  });
+
+  it("Seleciona um produto (YouTube) por seu texto", function () {
+    cy.get("#product").select("YouTube").should("have.value", "youtube");
+  });
+
+  it("Seleciona um produto (Mentoria) por seu valor (value)", function () {
+    cy.get("#product").select("mentoria").should("have.value", "mentoria");
+  });
+
+  it("Seleciona um produto (Blog) por seu índice", function () {
+    cy.get("#product").select(1).should("have.value", "blog");
+  });
+
+  it('Marca o tipo de atendimento "Feedback"', function () {
+    cy.get('input[type="radio"][value="feedback"]')
+      .check()
+      .should("have.value", "feedback");
+  });
+
+  it("Marca cada tipo de atendimento", function () {
+    cy.get('input[type="radio"]')
+      .should("have.length", 3)
+      .each(function ($radio) {
+        cy.wrap($radio).check();
+        cy.wrap($radio).should("be.checked");
+      });
   });
 });
